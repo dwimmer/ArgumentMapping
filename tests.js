@@ -15,4 +15,11 @@ test("rectangle!!!", function() {
 		});
 		
 	$button.trigger("click");
+
+  ok( document.getElementById("mainCanvas"), "Passed!" );
+});
+
+test( 'drawDefaultBezier()', function() {
+	ok( drawDefaultBezier(2, 3), "Passed!");
+	//not really a test... more proof of drawing
 });
