@@ -11,19 +11,3 @@ $("#mainCanvas").drawBezier({
   //x3: 350, y3: 50 // Start/end point
 });
 }
-
-function drawLine() {
-var canvas = document.getElementById("mainCanvas");
-var context = canvas.getContext("2d");
-context.moveTo(0, 0);
-context.lineTo(400, 400);
-context.strokeStyle = "#ff0000";
-context.stroke();
-}
-
-function draw(){
-  var ctx = document.getElementById('mainCanvas').getContext('2d');
-  ctx.fillRect(25,25,100,100);
-  ctx.clearRect(45,45,60,60);
-  ctx.strokeRect(50,50,50,50);
-}

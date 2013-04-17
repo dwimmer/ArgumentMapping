@@ -4,4 +4,5 @@ test( "Canvas Test", function() {
 
 test( 'drawDefaultBezier()', function() {
 	ok( drawDefaultBezier(2, 3), "Passed!");
+	//not really a test... more proof of drawing
 });
