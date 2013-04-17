@@ -4,8 +4,16 @@
   <meta charset="utf-8">
   <title>Argument Mapping Software</title>
   <script src="libraries/jquery-1.9.1.js"></script>
+  <script src="libraries/jcanvas.js"></script>
+  <script src="mapping.js"></script>
 </head>
 <body>
-	<canvas id="mainCanvas"> </canvas>
+	<div>
+		<span id="newBox" draggable="true">Box</span>
+		<span id="newConnector" draggable="true">Connector</span>
+		<button id="remove">Remove Box</button>
+	</div>
+	<canvas id="mainCanvas" width="1024px" height="768px" style="border: thin solid black">Your browser does not support HTML5 canvas.</canvas>
+	<textarea id="text"></textarea>
 </body>
 </html>
