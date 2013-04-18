@@ -1,4 +1,4 @@
-var selected;
+var selectedBox = null;
 
 function startDrag(e) {
 	//alert("drag");
@@ -20,48 +20,49 @@ function overDrag(e) {
 	e.preventDefault();
 }
 
-function unselectLayer(layer) {
-	console.log(layer);
-	if (layer.data.selected) {
-		$("#mainCanvas").animateLayer(layer, {
-  		shadowBlur: 0,
-  		shadowColor: "blue",
-		}, "medium");
-		
-		layer.data.selected = false;
-	}
+function removeSelected() {
+	$("#mainCanvas").removeLayer(selectedBox).drawLayers();
 }
 
-function removeSelected() {
-	$("#mainCanvas").getLayers().forEach(function(layer, index, array) { 
-		if (layer.data.selected) {
-			$("#mainCanvas").removeLayer(layer).drawLayers();
-		}
-	});
+
+function unselectLayer() {
+	if (selectedBox !== null) {
+		this.animateLayer(selectedBox, {
+	  		shadowBlur: 0,
+	  		shadowColor: "blue",
+		}, "medium");
+	}
+
+	selectedBox = null;	
 }
 
 function selectLayer(layer) {
-	$("#mainCanvas").getLayers().forEach(function(element, index, array) {
-		if (element != layer) {
-			unselectLayer(element)
-		}
-	}, layer);
-
-	$("#mainCanvas").animateLayer(layer, {
+	selectedBox = layer;
+	this.animateLayer(layer, {
   		shadowBlur: 20,
   		shadowColor: "blue",
 		}, "medium");
 		
-	layer.data.selected = true;
+	
 	$("#text").val(layer.data.text);
 }
 
+function toggleSelection(layer) {
+	//alert("click");
+	if (layer.data.moving === true) {
+		return;
+	}
+	var canvas = $(this);
+	if (selectedBox === layer) {
+		unselectLayer.call(canvas);
+	} else {
+		unselectLayer.call(canvas);
+		selectLayer.call(canvas, layer);
+	}
+}
+
 function updateModel() {
-	$("#mainCanvas").getLayers().forEach(function(layer, index, array) {
-		if (layer.data.selected) {
-			layer.data.text = $(this).val();
-		}
-	}, this);
+	selectedBox.data.text = $(this).val();
 }
 
 function updateSelected() {
@@ -70,36 +71,55 @@ function updateSelected() {
 }
 
 function updateView() {
+	$("#mainCanvas").removeLayer("TextForBox" + selectedBox.id);
+	
 	$("#mainCanvas").drawText({
-		name: "test",
+		name: "TextForBox" + selectedBox.id,
 		layer: true,
-  fillStyle: "#9cf",
-  strokeStyle: "#25a",
-  strokeWidth: 2,
-  x: 150, y: 100,
-  font: "24pt Verdana, sans-serif",
-  maxWidth: 100,
-  text: $(this).val()
-});
-console.log($("#mainCanvas").measureText("test"));
+		fillStyle: "#9cf",
+		strokeStyle: "#25a",
+		strokeWidth: 2,
+		x: selectedBox.x, y: selectedBox.y,
+		font: "16pt Verdana, sans-serif",
+		maxWidth: selectedBox.width,
+		text: $(this).val()
+	});
+	selectedBox.data.textview = $("#mainCanvas").getLayer("TextForBox" + selectedBox.id);
+	
+	$("#mainCanvas").setLayer(selectedBox, {
+		width: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).width + 5,
+		height: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).height + 5,
+  	}).drawLayers();
+  	
+console.log($("#mainCanvas").measureText("TextForBox" + selectedBox.id));
 }
 
 function drop(e) {
-	$("#mainCanvas").drawRect({
+	$(e.target).drawRect({
 		layer:true,
-		x: e.originalEvent.pageX,
-		y: e.originalEvent.pageY,
+		x: e.originalEvent.pageX - $(e.target).offset().left,
+		y: e.originalEvent.pageY - $(e.target).offset().top,
 		height: 100,
-		width: 100,
+		width: 200,
 		strokeWidth: 1,
 		strokeStyle: "black",
 		draggable: true,
 		fromCenter: true,
 		data: {
-			selected: false,
-			text: "hello"
+			text: "hello",
+			moving: false,
 		},
-		click: selectLayer
+		drag: function(layer) {
+			layer.data.moving = true;
+			layer.data.textview.x = layer.x;
+			layer.data.textview.y = layer.y;
+			//$(this).drawLayer(layer.data.textview);
+		},
+		dragstop: function(layer) {
+			//alert("done");
+			layer.data.moving = false;
+		},
+		click: toggleSelection
 	});
 	// $("#mainCanvas").drawRect({
 		// layer:true,
@@ -110,19 +130,4 @@ function drop(e) {
 		// fillStyle: "blue",
 		// draggable: true,
 	// });
-}
-
-window.onload = function() {
-
-	$("#newBox").on("dragstart", startDrag);
-	$("#newBox").on("dragend", endDrag);
-
-	$("#mainCanvas").on("dragenter", enterDrag);
-	$("#mainCanvas").on("dragleave", leaveDrag);
-	$("#mainCanvas").on("dragover", overDrag);
-	$("#mainCanvas").on("drop", drop);
-
-	$("#remove").on("click", removeSelected);
-	$("#text").on("change", updateSelected);
-
 }
