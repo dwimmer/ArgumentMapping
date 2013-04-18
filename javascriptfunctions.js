@@ -38,6 +38,7 @@ $("#mainCanvas").drawRect({
 
 })}
 
+
 function drawMyBezier(a1, b1) {
 
 $("#mainCanvas").drawBezier({
@@ -52,18 +53,8 @@ $("#mainCanvas").drawBezier({
   //cx4: 150, cy4: 1, // Control point
   //x3: 350, y3: 50 // Start/end point
   draggable: true,
-  
-  /*
-  click: function(layer) {
-    // Spin star
-    $(this).animateLayer(layer, {
-      rotate: '+=360'
-    });
-  }
-  */
-
 
 });
-  }
+}
 
 
