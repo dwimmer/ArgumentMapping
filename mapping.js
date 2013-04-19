@@ -1,19 +1,16 @@
 var selectedBox = null;
 
 function startDrag(e) {
-	//alert("drag");
+	e.originalEvent.dataTransfer.setData("text/plain", "Text to drag");
 }
 
 function enterDrag(e) {
-	
 }
 
 function leaveDrag(e) {
-	//alert("leave");
 }
 
 function endDrag(e) {
-//	alert("end");
 }
 
 function overDrag(e) {
@@ -32,8 +29,9 @@ function unselectLayer() {
 	  		shadowColor: "blue",
 		}, "medium");
 	}
-
+	
 	selectedBox = null;	
+	$("#text").val("No Selection.");
 }
 
 function selectLayer(layer) {
@@ -48,7 +46,6 @@ function selectLayer(layer) {
 }
 
 function toggleSelection(layer) {
-	//alert("click");
 	if (layer.data.moving === true) {
 		return;
 	}
@@ -87,14 +84,16 @@ function updateView() {
 	selectedBox.data.textview = $("#mainCanvas").getLayer("TextForBox" + selectedBox.id);
 	
 	$("#mainCanvas").setLayer(selectedBox, {
-		width: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).width + 5,
-		height: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).height + 5,
+		width: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).width + 15,
+		height: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).height + 15,
   	}).drawLayers();
   	
 console.log($("#mainCanvas").measureText("TextForBox" + selectedBox.id));
 }
 
 function drop(e) {
+	e.preventDefault();
+
 	$(e.target).drawRect({
 		layer:true,
 		x: e.originalEvent.pageX - $(e.target).offset().left,
@@ -103,31 +102,33 @@ function drop(e) {
 		width: 200,
 		strokeWidth: 1,
 		strokeStyle: "black",
+		shadowColor: "white",
 		draggable: true,
 		fromCenter: true,
 		data: {
-			text: "hello",
 			moving: false,
+			textview: null
+		},
+		dragstart: function(layer) {
+			/* layer.data.moving = true; */
 		},
 		drag: function(layer) {
 			layer.data.moving = true;
-			layer.data.textview.x = layer.x;
-			layer.data.textview.y = layer.y;
-			//$(this).drawLayer(layer.data.textview);
+			if (layer.data.textview !== null) {
+				layer.data.textview.x = layer.x;
+				layer.data.textview.y = layer.y;
+			}
 		},
 		dragstop: function(layer) {
-			//alert("done");
-			layer.data.moving = false;
+			/* layer.data.moving = false; */
 		},
-		click: toggleSelection
+		click: function(layer) {
+			if (layer.data.moving === false) {
+				toggleSelection.call(this, layer);
+			} else {
+				layer.data.moving = false;
+			}
+			
+		}
 	});
-	// $("#mainCanvas").drawRect({
-		// layer:true,
-		// x: e.originalEvent.pageX,
-		// y: e.originalEvent.pageY+50,
-		// height: 10,
-		// width: 100,
-		// fillStyle: "blue",
-		// draggable: true,
-	// });
 }
