@@ -1,4 +1,5 @@
 var selectedBox = null;
+var boxId = 1;
 
 function startDrag(e) {
 	e.originalEvent.dataTransfer.setData("text/plain", "Text to drag");
@@ -68,10 +69,10 @@ function updateSelected() {
 }
 
 function updateView() {
-	$("#mainCanvas").removeLayer("TextForBox" + selectedBox.id);
+	$("#mainCanvas").removeLayer("TextForBox" + selectedBox.data.id);
 	
 	$("#mainCanvas").drawText({
-		name: "TextForBox" + selectedBox.id,
+		name: "TextForBox" + selectedBox.data.id,
 		layer: true,
 		fillStyle: "#9cf",
 		strokeStyle: "#25a",
@@ -81,14 +82,13 @@ function updateView() {
 		maxWidth: selectedBox.width,
 		text: $(this).val()
 	});
-	selectedBox.data.textview = $("#mainCanvas").getLayer("TextForBox" + selectedBox.id);
+	selectedBox.data.textview = $("#mainCanvas").getLayer("TextForBox" + selectedBox.data.id);
 	
 	$("#mainCanvas").setLayer(selectedBox, {
-		width: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).width + 15,
-		height: $("#mainCanvas").measureText("TextForBox" + selectedBox.id).height + 15,
+		width: $("#mainCanvas").measureText("TextForBox" + selectedBox.data.id).width + 15,
+		height: $("#mainCanvas").measureText("TextForBox" + selectedBox.data.id).height + 15,
   	}).drawLayers();
   	
-console.log($("#mainCanvas").measureText("TextForBox" + selectedBox.id));
 }
 
 function drop(e) {
@@ -107,7 +107,8 @@ function drop(e) {
 		fromCenter: true,
 		data: {
 			moving: false,
-			textview: null
+			textview: null,
+			id: ++boxId
 		},
 		dragstart: function(layer) {
 			/* layer.data.moving = true; */

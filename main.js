@@ -9,6 +9,12 @@ $(window).on("load", function() {
 	$("#mainCanvas").on("drop", drop);
 
 	$("#remove").on("click", removeSelected);
-	$("#text").on("change", updateSelected);
+	$("#text").on("keyup", updateSelected);
+	$('a[href="#export"]').on("click", function(e) {
+/* 		alert($("#mainCanvas").getCanvasImage()); */
+		unselectLayer.call($("#mainCanvas"));
+		document.location = $("#mainCanvas").getCanvasImage();
+		return false;
+	});
 
 });
