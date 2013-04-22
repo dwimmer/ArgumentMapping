@@ -9,9 +9,8 @@ $(window).on("load", function() {
 	$("#mainCanvas").on("drop", drop);
 
 	$("#remove").on("click", removeSelected);
-	$("#text").on("keyup", updateSelected);
+	$("#text").on("keyup", updateView);
 	$('a[href="#export"]').on("click", function(e) {
-/* 		alert($("#mainCanvas").getCanvasImage()); */
 		unselectLayer.call($("#mainCanvas"));
 		document.location = $("#mainCanvas").getCanvasImage();
 		return false;

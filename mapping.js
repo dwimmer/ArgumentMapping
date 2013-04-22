@@ -19,13 +19,13 @@ function overDrag(e) {
 }
 
 function removeSelected() {
-	$("#mainCanvas").removeLayer(selectedBox).drawLayers();
+	$("#mainCanvas").removeLayerGroup(selectedBox.group).drawLayers();
 }
 
 
 function unselectLayer() {
 	if (selectedBox !== null) {
-		this.animateLayer(selectedBox, {
+		$(this).animateLayer(selectedBox, {
 	  		shadowBlur: 0,
 	  		shadowColor: "blue",
 		}, "medium");
@@ -37,56 +37,36 @@ function unselectLayer() {
 
 function selectLayer(layer) {
 	selectedBox = layer;
-	this.animateLayer(layer, {
+	$(this).animateLayer(layer, {
   		shadowBlur: 20,
   		shadowColor: "blue",
 		}, "medium");
 		
-	
-	$("#text").val(layer.data.text);
+	var text = $(this).getLayerGroup(selectedBox.group)[0];
+	$("#text").val(text.text);
 }
 
 function toggleSelection(layer) {
-	if (layer.data.moving === true) {
-		return;
-	}
-	var canvas = $(this);
 	if (selectedBox === layer) {
-		unselectLayer.call(canvas);
+		unselectLayer.call(this);
 	} else {
-		unselectLayer.call(canvas);
-		selectLayer.call(canvas, layer);
+		unselectLayer.call(this);
+		selectLayer.call(this, layer);
 	}
-}
-
-function updateModel() {
-	selectedBox.data.text = $(this).val();
-}
-
-function updateSelected() {
-	updateModel.call(this);
-	updateView.call(this);
 }
 
 function updateView() {
-	$("#mainCanvas").removeLayer("TextForBox" + selectedBox.data.id);
+
+	var text = $("#mainCanvas").getLayerGroup(selectedBox.group)[0];
 	
-	$("#mainCanvas").drawText({
-		name: "TextForBox" + selectedBox.data.id,
-		layer: true,
-		fillStyle: "#9cf",
-		strokeStyle: "#25a",
-		strokeWidth: 2,
-		x: selectedBox.x, y: selectedBox.y,
-		font: "16pt Verdana, sans-serif",
+	$("#mainCanvas").setLayer(text, {
 		maxWidth: selectedBox.width,
-		text: $(this).val()
+		text: $(this).val(),
 	});
-	selectedBox.data.textview = $("#mainCanvas").getLayer("TextForBox" + selectedBox.data.id);
 	
 	$("#mainCanvas").setLayer(selectedBox, {
-		width: $("#mainCanvas").measureText("TextForBox" + selectedBox.data.id).width + 15,
-		height: $("#mainCanvas").measureText("TextForBox" + selectedBox.data.id).height + 15,
+		width: $("#mainCanvas").measureText(text).width + 15,
+		height: $("#mainCanvas").measureText(text).height + 15,
   	}).drawLayers();
   	
 }
@@ -94,10 +74,23 @@ function updateView() {
 function drop(e) {
 	e.preventDefault();
 
-	$(e.target).drawRect({
-		layer:true,
-		x: e.originalEvent.pageX - $(e.target).offset().left,
-		y: e.originalEvent.pageY - $(e.target).offset().top,
+	var curBoxId = boxId++;
+
+	$(e.target).addLayer({
+		name: "TextForBox" + curBoxId,
+		group: "Box" + curBoxId,
+		type: "text",
+		fillStyle: "black",
+		fontSize: "16pt",
+		fontFamily: "Open Sans, sans-serif",
+		maxWidth: 200,
+		text: ""
+
+	})
+
+	$(e.target).addLayer({
+		type: "rectangle",
+		group: "Box" + curBoxId,
 		height: 100,
 		width: 200,
 		strokeWidth: 1,
@@ -107,21 +100,14 @@ function drop(e) {
 		fromCenter: true,
 		data: {
 			moving: false,
-			textview: null,
-			id: ++boxId
-		},
-		dragstart: function(layer) {
-			/* layer.data.moving = true; */
 		},
 		drag: function(layer) {
 			layer.data.moving = true;
-			if (layer.data.textview !== null) {
-				layer.data.textview.x = layer.x;
-				layer.data.textview.y = layer.y;
-			}
-		},
-		dragstop: function(layer) {
-			/* layer.data.moving = false; */
+			var text = $(this).getLayerGroup(layer.group)[0];
+			$(this).setLayer(text, {
+				x: layer.x,
+				y: layer.y
+			});
 		},
 		click: function(layer) {
 			if (layer.data.moving === false) {
@@ -132,4 +118,10 @@ function drop(e) {
 			
 		}
 	});
+	
+	$(e.target).setLayerGroup("Box" + curBoxId, {
+		x: e.originalEvent.pageX - $(e.target).offset().left,
+		y: e.originalEvent.pageY - $(e.target).offset().top,
+	})
+	
 }
