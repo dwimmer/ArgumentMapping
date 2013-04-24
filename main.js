@@ -1,19 +1,45 @@
+var stage;
+var layer;
+
 $(window).on("load", function() {
 
-	$("#newBox").on("dragstart", startDrag);
-	$("#newBox").on("dragend", endDrag);
+	$("#newBox").on("dragstart", function(e) {
+		e.originalEvent.dataTransfer.setData("text/plain", "Text to drag");
+	});
 
-	$("#mainCanvas").on("dragenter", enterDrag);
-	$("#mainCanvas").on("dragleave", leaveDrag);
-	$("#mainCanvas").on("dragover", overDrag);
-	$("#mainCanvas").on("drop", drop);
+	$("#stage-container").on("dragover", function(e) {
+		e.preventDefault();
+	});
+	
+	$("#stage-container").on("drop", function(e) {
+		e.preventDefault();
+		var x = e.originalEvent.pageX - $(e.target).offset().left;
+		var y = e.originalEvent.pageY - $(e.target).offset().top;
+		createBox(x, y);
+	});
 
-	$("#remove").on("click", removeSelected);
+	$("#remove").on("click", removeSelectedBox);
 	$("#text").on("keyup", updateView);
+	
 	$('a[href="#export"]').on("click", function(e) {
-		unselectLayer.call($("#mainCanvas"));
-		document.location = $("#mainCanvas").getCanvasImage();
+		unselectBox();
+		stage.toDataURL({
+			callback: function(dataURL) {
+				window.open(dataURL, "Canvas Image");
+			}
+		});
 		return false;
 	});
+
+	stage = new Kinetic.Stage({
+		container: 'stage-container',
+		width: 1024,
+		height: 768,
+		draggable: true
+	});
+	
+	layer = new Kinetic.Layer();
+	
+	stage.add(layer);
 
 });

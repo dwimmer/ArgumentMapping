@@ -1,127 +1,89 @@
 var selectedBox = null;
-var boxId = 1;
 
-function startDrag(e) {
-	e.originalEvent.dataTransfer.setData("text/plain", "Text to drag");
-}
-
-function enterDrag(e) {
-}
-
-function leaveDrag(e) {
-}
-
-function endDrag(e) {
-}
-
-function overDrag(e) {
-	e.preventDefault();
-}
-
-function removeSelected() {
-	$("#mainCanvas").removeLayerGroup(selectedBox.group).drawLayers();
+function removeSelectedBox() {
+	selectedBox.destroy();
+	stage.draw();
+	
+	selectedBox = null;	
+	$("#text").val("");
 }
 
 
-function unselectLayer() {
+function unselectBox() {
 	if (selectedBox !== null) {
-		$(this).animateLayer(selectedBox, {
-	  		shadowBlur: 0,
-	  		shadowColor: "blue",
-		}, "medium");
+		selectedBox.get(".outline")[0].disableShadow();
+		stage.draw();
 	}
 	
 	selectedBox = null;	
-	$("#text").val("No Selection.");
+	$("#text").val("");
 }
 
-function selectLayer(layer) {
-	selectedBox = layer;
-	$(this).animateLayer(layer, {
-  		shadowBlur: 20,
-  		shadowColor: "blue",
-		}, "medium");
+function selectBox(box) {
+
+	selectedBox = box;
+	selectedBox.get(".outline")[0].enableShadow();
+	stage.draw();
 		
-	var text = $(this).getLayerGroup(selectedBox.group)[0];
-	$("#text").val(text.text);
+	$("#text").val(selectedBox.get(".content")[0].getText());
+	$("#text").focus();
 }
 
-function toggleSelection(layer) {
-	if (selectedBox === layer) {
-		unselectLayer.call(this);
+function toggleSelection(event) {
+	if (selectedBox === this) {
+		unselectBox();
 	} else {
-		unselectLayer.call(this);
-		selectLayer.call(this, layer);
+		unselectBox();
+		selectBox(this);
 	}
 }
 
 function updateView() {
 
-	var text = $("#mainCanvas").getLayerGroup(selectedBox.group)[0];
+	var text = selectedBox.get(".content")[0];
 	
-	$("#mainCanvas").setLayer(text, {
-		maxWidth: selectedBox.width,
-		text: $(this).val(),
+	text.setAttrs({
+		text: $(this).val()
 	});
 	
-	$("#mainCanvas").setLayer(selectedBox, {
-		width: $("#mainCanvas").measureText(text).width + 15,
-		height: $("#mainCanvas").measureText(text).height + 15,
-  	}).drawLayers();
+	stage.draw();
   	
 }
 
-function drop(e) {
-	e.preventDefault();
-
-	var curBoxId = boxId++;
-
-	$(e.target).addLayer({
-		name: "TextForBox" + curBoxId,
-		group: "Box" + curBoxId,
-		type: "text",
-		fillStyle: "black",
-		fontSize: "16pt",
-		fontFamily: "Open Sans, sans-serif",
-		maxWidth: 200,
-		text: ""
-
-	})
-
-	$(e.target).addLayer({
-		type: "rectangle",
-		group: "Box" + curBoxId,
+function createBox(x, y) {
+	var rect = new Kinetic.Rect({
+		name: "outline",
 		height: 100,
 		width: 200,
 		strokeWidth: 1,
-		strokeStyle: "black",
-		shadowColor: "white",
-		draggable: true,
-		fromCenter: true,
-		data: {
-			moving: false,
-		},
-		drag: function(layer) {
-			layer.data.moving = true;
-			var text = $(this).getLayerGroup(layer.group)[0];
-			$(this).setLayer(text, {
-				x: layer.x,
-				y: layer.y
-			});
-		},
-		click: function(layer) {
-			if (layer.data.moving === false) {
-				toggleSelection.call(this, layer);
-			} else {
-				layer.data.moving = false;
-			}
-			
-		}
+		stroke: "black",
+		shadowEnabled: false,
+		shadowColor: "blue"
 	});
 	
-	$(e.target).setLayerGroup("Box" + curBoxId, {
-		x: e.originalEvent.pageX - $(e.target).offset().left,
-		y: e.originalEvent.pageY - $(e.target).offset().top,
-	})
+	var text = new Kinetic.Text({
+		name: "content",
+		fontFamily: "Open Sans",
+		fontSize: 16,
+		text: "New Box Content",
+		fill: "black",
+		width: rect.getWidth(),
+		height: rect.getHeight()
+		
+	});
 	
+	var box = new Kinetic.Group({
+		x: x,
+		y: y,
+		draggable: true,
+	});
+	
+	box.on("click", toggleSelection);
+	
+	box.add(rect);
+	box.add(text);
+	
+	layer.add(box);
+	stage.draw();
+
 }
