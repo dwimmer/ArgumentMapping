@@ -28,7 +28,7 @@ function selectBox(box) {
 
 	selectedBox = box;
 	selectedBox.get(".outline")[0].enableShadow();
-	stage.draw();
+	
 		
 	$("#text").val(selectedBox.get(".content")[0].getText());
 	$("#text").focus();
@@ -40,6 +40,8 @@ function toggleSelection(event) {
 	} else {
 		unselectBox();
 		selectBox(this);
+		this.moveToTop();
+		stage.draw();
 	}
 }
 
@@ -86,7 +88,7 @@ function createBox(x, y) {
 	
 	box.startLineArray = [];
 	box.endLineArray = [];
-	box.on("click", toggleSelection);
+	box.on("mousedown", toggleSelection);
 	box.on("dblclick", lineAttempt);
 	box.on("dragmove", updateLines);
 	
