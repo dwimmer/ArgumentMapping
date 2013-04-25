@@ -26,7 +26,16 @@ $(window).on("load", function() {
 		unselectBox();
 		stage.toDataURL({
 			callback: function(dataURL) {
-				window.open(dataURL, "Canvas Image");
+				var link = document.createElement("a");
+				link.download = "canvas.png";
+				link.href = dataURL;
+				link.target = "_blank";
+				
+				var evObj = document.createEvent("MouseEvent");
+				evObj.initEvent("click", true, false);
+				
+				link.dispatchEvent(evObj);
+/* 				link.click(); */
 			}
 		});
 		return false;
