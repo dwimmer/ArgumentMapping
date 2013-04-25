@@ -1,5 +1,10 @@
 var selectedBox = null;
 
+
+var lineStartBox = null;
+var lineInProgress = false;
+
+
 function removeSelectedBox() {
 	selectedBox.destroy();
 	stage.draw();
@@ -75,15 +80,67 @@ function createBox(x, y) {
 	var box = new Kinetic.Group({
 		x: x,
 		y: y,
-		draggable: true,
+		draggable: true
 	});
 	
+	box.startLineArray = [];
+	box.endLineArray = [];
 	box.on("click", toggleSelection);
+	box.on("dblclick", lineAttempt);
+	box.on("dragmove", updateLines);
 	
 	box.add(rect);
 	box.add(text);
 	
 	layer.add(box);
 	stage.draw();
+	
+	return box;
+}
 
+function lineAttempt() {
+
+	if (lineInProgress == false) {
+		lineStartBox = this;
+		lineInProgress = true;
+
+	} else {
+		var line = new Kinetic.Line({
+			points: [lineStartBox.getX(), lineStartBox.getY(), this.getX(), this.getY()],
+			stroke: 'green',
+			draggable: true
+		});
+		console.log(line);
+		
+		layer.add(line);
+		stage.draw();
+		lineInProgress = false;
+		
+		lineStartBox.startLineArray.push(line);
+		this.endLineArray.push(line);
+		lineStartBox = null;
+	}
+	
+}
+
+function updateLines() {
+
+	this.startLineArray.forEach(function(line) {
+		//update start points
+		var pointsArray = line.getPoints();
+		pointsArray[0].x = this.getX();
+		pointsArray[0].y = this.getY();
+		line.setPoints(pointsArray);
+	}, this);
+	
+	this.endLineArray.forEach(function(line) {
+		//update end points
+		var pointsArray = line.getPoints();
+		pointsArray[1].x = this.getX();
+		pointsArray[1].y = this.getY();
+		line.setPoints(pointsArray);
+	}, this);
+	
+	stage.draw();
+	
 }

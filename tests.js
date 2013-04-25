@@ -22,3 +22,14 @@ module( "Canvas", {
 test( "Canvas Test", function() {
 	ok( stage, "does stage exist?" );  
 });
+
+test( "Line Creation Test", function() {
+	box1 = createBox(0,0);
+	box2 = createBox(100,100);
+	
+	ok(!lineInProgress, "line not in progress");
+	lineAttempt.call(box1);
+	ok(lineInProgress, "line in progress");
+	lineAttempt.call(box2);
+	ok(!lineInProgress, "line finished");
+});
