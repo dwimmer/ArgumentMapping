@@ -16,6 +16,7 @@ $(window).on("load", function() {
 		var x = e.originalEvent.pageX - $(e.target).offset().left;
 		var y = e.originalEvent.pageY - $(e.target).offset().top;
 		createBox(x, y);
+		stage.draw();
 	});
 
 	$("#remove").on("click", removeSelectedBox);

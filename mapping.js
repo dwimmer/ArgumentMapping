@@ -62,6 +62,7 @@ function createBox(x, y) {
 		width: 200,
 		strokeWidth: 1,
 		stroke: "black",
+		fill: "white",
 		shadowEnabled: false,
 		shadowColor: "blue"
 	});
@@ -93,7 +94,6 @@ function createBox(x, y) {
 	box.add(text);
 	
 	layer.add(box);
-	stage.draw();
 	
 	return box;
 }
@@ -105,22 +105,40 @@ function lineAttempt() {
 		lineInProgress = true;
 
 	} else {
+		var line = createConnector(lineStartBox, this);
+		stage.draw();
+		lineInProgress = false;
+		lineStartBox = null;
+		
+
+	}
+	
+}
+
+function createConnector(lineStartBox, lineEndBox) {
+		var startPoint = {
+			x: lineStartBox.getX() + lineStartBox.get(".outline")[0].getWidth() / 2,
+			y: lineStartBox.getY() + lineStartBox.get(".outline")[0].getHeight() / 2
+		};
+		
+		var endPoint = {
+			x: lineEndBox.getX() + lineEndBox.get(".outline")[0].getWidth() / 2,
+			y: lineEndBox.getY() + lineEndBox.get(".outline")[0].getHeight() / 2
+		};
+
 		var line = new Kinetic.Line({
-			points: [lineStartBox.getX(), lineStartBox.getY(), this.getX(), this.getY()],
+			points: [startPoint, endPoint],
 			stroke: 'green',
 			draggable: true
 		});
-		console.log(line);
 		
 		layer.add(line);
-		stage.draw();
-		lineInProgress = false;
+		line.moveToBottom();
 		
 		lineStartBox.startLineArray.push(line);
-		this.endLineArray.push(line);
-		lineStartBox = null;
-	}
-	
+		lineEndBox.endLineArray.push(line);
+		
+		return line;
 }
 
 function updateLines() {
@@ -128,16 +146,16 @@ function updateLines() {
 	this.startLineArray.forEach(function(line) {
 		//update start points
 		var pointsArray = line.getPoints();
-		pointsArray[0].x = this.getX();
-		pointsArray[0].y = this.getY();
+		pointsArray[0].x = this.getX() + this.get(".outline")[0].getWidth() / 2;
+		pointsArray[0].y = this.getY() + this.get(".outline")[0].getHeight() / 2;
 		line.setPoints(pointsArray);
 	}, this);
 	
 	this.endLineArray.forEach(function(line) {
 		//update end points
 		var pointsArray = line.getPoints();
-		pointsArray[1].x = this.getX();
-		pointsArray[1].y = this.getY();
+		pointsArray[1].x = this.getX() + this.get(".outline")[0].getWidth() / 2;
+		pointsArray[1].y = this.getY() + this.get(".outline")[0].getHeight() / 2;
 		line.setPoints(pointsArray);
 	}, this);
 	
