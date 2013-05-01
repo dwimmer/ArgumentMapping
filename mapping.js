@@ -69,16 +69,25 @@ function updateView() {
   	
 }
 
-function createBox(x, y) {
-	var rect = new Kinetic.Rect({
+function createBox(x, y, color) {
+	var width = 200;
+	var height = 100;
+
+	var outline = new Kinetic.Rect({
 		name: "outline",
-		height: 100,
-		width: 200,
-		strokeWidth: 1,
+		width: width,
+		height: height,
+		strokeWidth: 2,
 		stroke: "black",
-		fill: "white",
 		shadowEnabled: false,
-		shadowColor: "blue"
+		shadowColor: "blue",
+	});
+	
+	var background = new Kinetic.Rect({
+		name: "background",
+		width: width,
+		height: height,
+		fill: color,
 	});
 	
 	var text = new Kinetic.Text({
@@ -87,9 +96,8 @@ function createBox(x, y) {
 		fontSize: 16,
 		text: "New Box Content",
 		fill: "black",
-		width: rect.getWidth(),
-		height: rect.getHeight()
-		
+		width: width,
+		height: height		
 	});
 	
 	var box = new Kinetic.Group({
@@ -104,7 +112,8 @@ function createBox(x, y) {
 	box.on("dblclick", lineAttempt);
 	box.on("dragmove", updateLines);
 	
-	box.add(rect);
+	box.add(outline);
+	box.add(background);
 	box.add(text);
 	
 	layer.add(box);

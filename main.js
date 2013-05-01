@@ -3,8 +3,12 @@ var layer;
 
 $(window).on("load", function() {
 
-	$("#newBox").on("dragstart", function(e) {
-		e.originalEvent.dataTransfer.setData("text/plain", "Text to drag");
+	$("#newPremise").on("dragstart", function(e) {
+		e.originalEvent.dataTransfer.setData("text/plain", "rgb(128,192,128)");
+	});
+	
+	$("#newRebuttal").on("dragstart", function(e) {
+		e.originalEvent.dataTransfer.setData("text/plain", "rgb(255,128,128)");
 	});
 
 	$("#stage-container").on("dragover", function(e) {
@@ -15,7 +19,8 @@ $(window).on("load", function() {
 		e.preventDefault();
 		var x = e.originalEvent.pageX - $(e.target).offset().left;
 		var y = e.originalEvent.pageY - $(e.target).offset().top;
-		createBox(x, y);
+		var color = e.originalEvent.dataTransfer.getData("text/plain");
+		createBox(x, y, color);
 		stage.draw();
 	});
 
