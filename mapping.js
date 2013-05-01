@@ -65,18 +65,40 @@ function updateView() {
 		text: $(this).val()
 	});
 	
+	var textHeight = text.getHeight();
+	var minHeight = text.getTextHeight() * 3;
+	
+	if (textHeight > minHeight) {
+		selectedBox.get(".outline")[0].setHeight(textHeight);
+		selectedBox.get(".background")[0].setHeight(textHeight);
+	} else {
+		selectedBox.get(".outline")[0].setHeight(minHeight);
+		selectedBox.get(".background")[0].setHeight(minHeight);
+	}
+	
+	
 	stage.draw();
   	
 }
 
 function createBox(x, y, color) {
 	var width = 200;
-	var height = 100;
+	
+	var text = new Kinetic.Text({
+		name: "content",
+		fontFamily: "Open Sans",
+		fontSize: 16,
+		text: "New Box Content",
+		fill: "black",
+		width: width,
+	});
+	
+	var minHeight = text.getTextHeight() * 3;
 
 	var outline = new Kinetic.Rect({
 		name: "outline",
 		width: width,
-		height: height,
+		height: minHeight,
 		strokeWidth: 2,
 		stroke: "black",
 		shadowEnabled: false,
@@ -86,19 +108,11 @@ function createBox(x, y, color) {
 	var background = new Kinetic.Rect({
 		name: "background",
 		width: width,
-		height: height,
+		height: minHeight,
 		fill: color,
 	});
 	
-	var text = new Kinetic.Text({
-		name: "content",
-		fontFamily: "Open Sans",
-		fontSize: 16,
-		text: "New Box Content",
-		fill: "black",
-		width: width,
-		height: height		
-	});
+
 	
 	var box = new Kinetic.Group({
 		x: x,
