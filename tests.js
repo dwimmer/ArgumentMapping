@@ -23,6 +23,12 @@ test( "Canvas Test", function() {
 	ok( stage, "does stage exist?" );  
 });
 
+
+test("Box Creation Test", function() {
+	premise = createBox(20,20);
+	ok(premise, "Box is created");
+})
+
 test( "Line Creation Test", function() {
 	box1 = createBox(0,0);
 	box2 = createBox(100,100);
@@ -34,6 +40,21 @@ test( "Line Creation Test", function() {
 	ok(!lineInProgress, "line finished");
 });
 
+test("Box Removal Test", function(){
+    box = createBox(0,0);
+    selectBox(box);
+    ok(selectedBox, "Box is selected");
+    ok(selectedBox.destroy, "Box is deleted");
+    selectedBox = null;	
+ });
+
+test("Box Toggle test", function(){
+    box1 = createBox(20,20);
+    ok(!selectedBox, "Box is not selected");
+    selectBox(box1);
+    ok(selectedBox, "Box is selected");
+	
+});
 
 test( "Line Drag Test:", function() {
 	box1 = createBox(0,0);
