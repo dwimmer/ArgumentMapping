@@ -6,6 +6,18 @@ var lineInProgress = false;
 
 
 function removeSelectedBox() {
+	selectedBox.startLineArray.forEach(function(line) {
+		var index = line.endBox.endLineArray.indexOf(line);
+		line.endBox.endLineArray.splice(index,1);
+		line.destroy();
+	});
+	
+	selectedBox.endLineArray.forEach(function(line) {
+		var index = line.startBox.startLineArray.indexOf(line);
+		line.startBox.startLineArray.splice(index,1);
+		line.destroy();
+	});
+
 	selectedBox.destroy();
 	stage.draw();
 	
@@ -131,8 +143,10 @@ function createConnector(lineStartBox, lineEndBox) {
 		var line = new Kinetic.Line({
 			points: [startPoint, endPoint],
 			stroke: 'green',
-			draggable: true
 		});
+		
+		line.startBox = lineStartBox;
+		line.endBox = lineEndBox;
 		
 		layer.add(line);
 		line.moveToBottom();
