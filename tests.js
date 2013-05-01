@@ -62,7 +62,7 @@ test( "Line Drag Test:", function() {
 	line = createConnector(box1,box2);
 	box1.setX(5);
 	box1.setY(5);
-	updateLines.call(box1);
+	updateLines(box1);
 	ok(line.getPoints()[0].x === 5 + box1.get(".outline")[0].getWidth() / 2, "LineStart.x = ");
 	ok(line.getPoints()[0].y === 5 + box1.get(".outline")[0].getHeight() / 2, "LineStart.y = ");
 });

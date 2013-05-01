@@ -142,7 +142,9 @@ function createBox(x, y, color) {
 	box.endLineArray = [];
 	box.on("mousedown", toggleSelection);
 	box.on("dblclick", lineAttempt);
-	box.on("dragmove", updateLines);
+	box.on("dragmove", function() {
+		updateLinesForBox(this);
+	});
 	
 	box.add(outline);
 	box.add(background);
@@ -198,23 +200,23 @@ function createConnector(lineStartBox, lineEndBox) {
 		return line;
 }
 
-function updateLines() {
+function updateLines(box) {
 
-	this.startLineArray.forEach(function(line) {
+	box.startLineArray.forEach(function(line) {
 		//update start points
 		var pointsArray = line.getPoints();
 		pointsArray[0].x = this.getX() + this.get(".outline")[0].getWidth() / 2;
 		pointsArray[0].y = this.getY() + this.get(".outline")[0].getHeight() / 2;
 		line.setPoints(pointsArray);
-	}, this);
+	}, box);
 	
-	this.endLineArray.forEach(function(line) {
+	box.endLineArray.forEach(function(line) {
 		//update end points
 		var pointsArray = line.getPoints();
 		pointsArray[1].x = this.getX() + this.get(".outline")[0].getWidth() / 2;
 		pointsArray[1].y = this.getY() + this.get(".outline")[0].getHeight() / 2;
 		line.setPoints(pointsArray);
-	}, this);
+	}, box);
 	
 	stage.draw();
 	
