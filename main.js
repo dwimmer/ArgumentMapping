@@ -50,9 +50,8 @@ $(window).on("load", function() {
 
 	stage = new Kinetic.Stage({
 		container: 'stage-container',
-		width: 1024,
-		height: 768,
-		draggable: true
+		width: 2560,
+		height: 1600,
 	});
 	
 	layer = new Kinetic.Layer();
