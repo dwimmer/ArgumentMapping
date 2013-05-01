@@ -23,17 +23,18 @@ function removeSelectedBox() {
 	
 	selectedBox = null;	
 	$("#text").val("");
+	$("#width").val("");
 }
 
 
 function unselectBox() {
 	if (selectedBox !== null) {
 		selectedBox.get(".outline")[0].disableShadow();
-		stage.draw();
 	}
 	
 	selectedBox = null;	
 	$("#text").val("");
+	$("#width").val("");
 }
 
 function selectBox(box) {
@@ -44,6 +45,7 @@ function selectBox(box) {
 		
 	$("#text").val(selectedBox.get(".content")[0].getText());
 	$("#text").focus();
+	$("#width").val(selectedBox.get(".content")[0].getWidth());
 }
 
 function toggleSelection(event) {
@@ -53,11 +55,11 @@ function toggleSelection(event) {
 		unselectBox();
 		selectBox(this);
 		this.moveToTop();
-		stage.draw();
 	}
+	stage.draw();
 }
 
-function updateView() {
+function updateTextView() {
 
 	var text = selectedBox.get(".content")[0];
 	
@@ -65,17 +67,33 @@ function updateView() {
 		text: $(this).val()
 	});
 	
-	var textHeight = text.getHeight();
-	var minHeight = text.getTextHeight() * 3;
+	resizeText(selectedBox);
+	
+	stage.draw();
+  	
+}
+
+function resizeText(box) {
+	var textHeight = box.get(".content")[0].getHeight();
+	var minHeight = box.get(".content")[0].getTextHeight() * 3;
 	
 	if (textHeight > minHeight) {
-		selectedBox.get(".outline")[0].setHeight(textHeight);
-		selectedBox.get(".background")[0].setHeight(textHeight);
+		box.get(".outline")[0].setHeight(textHeight);
+		box.get(".background")[0].setHeight(textHeight);
 	} else {
-		selectedBox.get(".outline")[0].setHeight(minHeight);
-		selectedBox.get(".background")[0].setHeight(minHeight);
+		box.get(".outline")[0].setHeight(minHeight);
+		box.get(".background")[0].setHeight(minHeight);
 	}
+}
+
+function updateWidth() {
+
+	selectedBox.getChildren().forEach(function(child) {
+		child.setWidth($(this).val());
+	},this);
 	
+	resizeText(selectedBox);
+	updateLines(selectedBox);
 	
 	stage.draw();
   	

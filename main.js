@@ -25,10 +25,12 @@ $(window).on("load", function() {
 	});
 
 	$("#remove").on("click", removeSelectedBox);
-	$("#text").on("keyup", updateView);
+	$("#text").on("keyup", updateTextView);
+	$("#width").on("change", updateWidth);
 	
 	$('a[href="#export"]').on("click", function(e) {
 		unselectBox();
+		stage.draw();
 		stage.toDataURL({
 			callback: function(dataURL) {
 				var link = document.createElement("a");
