@@ -99,7 +99,7 @@ test("Box Resize Test", 3, function() {
 	updateWidth(300);
 	
 	selectedBox.getChildren().forEach(function(child) {
-		equal(child.getWidth(), 300, child.getName()+" width matches input");
+		equal(child.getWidth(), 300, child.getName() + " width matches input");
 	},this);
 	
 });
@@ -109,21 +109,21 @@ test( "Update Text View Test", function() {
 	selectBox(box);
 	//make sure textHeight < minHeight is still minHeight
 	updateTextView("line1");
+	fontSize = selectedBox.get('.content')[0].getFontSize();
 	selectedBox.getChildren().forEach(function(child) {
 		if (child.getName() == "content")
-			equal(child.getHeight(), 16*1, child.getName()+" height is one line");
+			equal(child.getHeight(), fontSize * 1, fontSize + " height is one line");
 		else
-			equal(child.getHeight(), 16*3, child.getName()+" height is minHeight");
+			equal(child.getHeight(), fontSize * 3, fontSize + " height is minHeight");
 	},this);
 	
 	//make sure size can be bigger than minHeight
 	updateTextView("line1\nline2\nline3\nline4");
 	selectedBox.getChildren().forEach(function(child) {
-		equal(child.getHeight(), 16*4, child.getName()+" height greater than minHeight");
+		equal(child.getHeight(), fontSize * 4, child.getName() + " height greater than minHeight");
 	},this);
 	
 });
-
 test("Edit Box Text Test:", 2, function() {
 	var box1 = createBox(0,0);
 	equal(box1.get(".content")[0].getText(), "New Box Content","Initial Text is 'New Box Content'" );
