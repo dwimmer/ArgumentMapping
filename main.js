@@ -25,7 +25,9 @@ $(window).on("load", function() {
 	});
 
 	$("#remove").on("click", removeSelectedBox);
-	$("#text").on("keyup", updateTextView);
+	$("#text").on("keyup", function() {
+		updateTextView($(this).val());
+	});
 	$("#width").on("change", function(){
 		updateWidth($(this).val());
 	});
