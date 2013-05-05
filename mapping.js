@@ -143,7 +143,7 @@ function createBox(x, y, color) {
 	box.on("mousedown", toggleSelection);
 	box.on("dblclick", lineAttempt);
 	box.on("dragmove", function() {
-		updateLinesForBox(this);
+		updateLines(this);
 	});
 	
 	box.add(outline);
