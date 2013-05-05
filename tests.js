@@ -112,15 +112,15 @@ test( "Update Text View Test", function() {
 	fontSize = selectedBox.get('.content')[0].getFontSize();
 	selectedBox.getChildren().forEach(function(child) {
 		if (child.getName() == "content")
-			equal(child.getHeight(), fontSize * 1, fontSize + " height is one line");
+			equal(child.getHeight(), fontSize * 1, child.getName() + " height is one line");
 		else
-			equal(child.getHeight(), fontSize * 3, fontSize + " height is minHeight");
+			equal(child.getHeight(), fontSize * 3, child.getName() + " height is minHeight when content is one line");
 	},this);
 	
 	//make sure size can be bigger than minHeight
 	updateTextView("line1\nline2\nline3\nline4");
 	selectedBox.getChildren().forEach(function(child) {
-		equal(child.getHeight(), fontSize * 4, child.getName() + " height greater than minHeight");
+		equal(child.getHeight(), fontSize * 4, child.getName() + " height greater than minHeight when content is 4 lines");
 	},this);
 	
 });
