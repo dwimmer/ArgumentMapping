@@ -123,3 +123,13 @@ test( "Update Text View Test", function() {
 	},this);
 	
 });
+
+test("Edit Box Text Test:", 2, function() {
+	var box1 = createBox(0,0);
+	equal(box1.get(".content")[0].getText(), "New Box Content","Initial Text is 'New Box Content'" );
+	selectBox(box1);
+	updateTextView("Hello")
+	equal(box1.get(".content")[0].getText(), "Hello","Updated text not equal to 'Hello'" );
+
+
+});
