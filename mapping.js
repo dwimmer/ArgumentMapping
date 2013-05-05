@@ -4,17 +4,23 @@ var selectedBox = null;
 var lineStartBox = null;
 var lineInProgress = false;
 
+var id = 0;
+
 
 function removeSelectedBox() {
-	selectedBox.startLineArray.forEach(function(line) {
-		var index = line.endBox.endLineArray.indexOf(line);
-		line.endBox.endLineArray.splice(index,1);
+	selectedBox.getAttrs().startLineArray.forEach(function(lineId) {
+		var line = layer.get("#"+ lineId)[0];
+		var endBox = layer.get("#" + line.getAttrs().endBox)[0];
+		var index = endBox.getAttrs().endLineArray.indexOf(lineId);
+		endBox.getAttrs().endLineArray.splice(index,1);
 		line.destroy();
 	});
 	
-	selectedBox.endLineArray.forEach(function(line) {
-		var index = line.startBox.startLineArray.indexOf(line);
-		line.startBox.startLineArray.splice(index,1);
+	selectedBox.getAttrs().endLineArray.forEach(function(lineId) {
+		var line = layer.get("#"+ lineId)[0];
+		var startBox = layer.get("#" + line.getAttrs().startBox)[0];
+		var index = startBox.getAttrs().startLineArray.indexOf(lineId);
+		startBox.getAttrs().startLineArray.splice(index,1);
 		line.destroy();
 	});
 
@@ -142,11 +148,12 @@ function createBox(x, y, type) {
 		x: x,
 		y: y,
 		draggable: true,
-		type: type
+		type: type,
+		id: id++,
+		startLineArray: [],
+		endLineArray: [],
 	});
 	
-	box.startLineArray = [];
-	box.endLineArray = [];
 	box.on("mousedown", function(){
 		toggleSelection(this);
 	});
@@ -193,25 +200,26 @@ function createConnector(lineStartBox, lineEndBox) {
 		};
 
 		var line = new Kinetic.Line({
+			id: id++,
 			points: [startPoint, endPoint],
 			stroke: 'green',
+			startBox: lineStartBox.getId(),
+			endBox: lineEndBox.getId(),
 		});
-		
-		line.startBox = lineStartBox;
-		line.endBox = lineEndBox;
 		
 		layer.add(line);
 		line.moveToBottom();
 		
-		lineStartBox.startLineArray.push(line);
-		lineEndBox.endLineArray.push(line);
+		lineStartBox.getAttrs().startLineArray.push(line.getId());
+		lineEndBox.getAttrs().endLineArray.push(line.getId());
 		
 		return line;
 }
 
 function updateLines(box) {
 
-	box.startLineArray.forEach(function(line) {
+	box.getAttrs().startLineArray.forEach(function(lineId) {
+		var line = layer.get("#"+ lineId)[0];
 		//update start points
 		var pointsArray = line.getPoints();
 		pointsArray[0].x = this.getX() + this.get(".outline")[0].getWidth() / 2;
@@ -219,7 +227,8 @@ function updateLines(box) {
 		line.setPoints(pointsArray);
 	}, box);
 	
-	box.endLineArray.forEach(function(line) {
+	box.getAttrs().endLineArray.forEach(function(lineId) {
+		var line = layer.get("#"+ lineId)[0];
 		//update end points
 		var pointsArray = line.getPoints();
 		pointsArray[1].x = this.getX() + this.get(".outline")[0].getWidth() / 2;
