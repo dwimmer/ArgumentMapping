@@ -92,3 +92,14 @@ test("Line Drag Test", function() {
 	equal(line.getPoints()[0].x, box1centerx, "Line start x coordinate");
 	equal(line.getPoints()[0].y, box1centery, "Line start y coordinate");
 });
+
+test("Box Resize Test", 3, function() {
+	var box = createBox(0,0);
+	selectBox(box);
+	updateWidth(300);
+	
+	selectedBox.getChildren().forEach(function(child) {
+		equal(child.getWidth(), 300, child.getName()+" width matches input");
+	},this);
+	
+});

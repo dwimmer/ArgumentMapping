@@ -26,7 +26,9 @@ $(window).on("load", function() {
 
 	$("#remove").on("click", removeSelectedBox);
 	$("#text").on("keyup", updateTextView);
-	$("#width").on("change", updateWidth);
+	$("#width").on("change", function(){
+		updateWidth($(this).val());
+	});
 	
 	$('a[href="#export"]').on("click", function(e) {
 		unselectBox();
