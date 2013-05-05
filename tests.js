@@ -20,49 +20,75 @@ module( "Canvas", {
 });
 
 test( "Canvas Test", function() {
-	ok( stage, "does stage exist?" );  
+	ok(stage, "does stage exist?");  
 });
 
 
 test("Box Creation Test", function() {
-	premise = createBox(20,20);
-	ok(premise, "Box is created");
+	var premise = createBox(20,20);
+	
+	ok(premise, "Box object exists.");
+	notEqual(layer.getChildren().indexOf(premise), -1, "Box is on the canvas.");
+	equal(premise.getX(), 20, "Box x coordinate.")
+	equal(premise.getY(), 20, "Box y coordinate.")
 })
 
 test( "Line Creation Test", function() {
-	box1 = createBox(0,0);
-	box2 = createBox(100,100);
+	var box1 = createBox(0,0);
+	var box2 = createBox(100,100);
+	var line = createConnector(box1,box2);
 	
-	ok(!lineInProgress, "line not in progress");
-	lineAttempt.call(box1);
-	ok(lineInProgress, "line in progress");
-	lineAttempt.call(box2);
-	ok(!lineInProgress, "line finished");
+	var box1centerx = 0 + box1.get(".outline")[0].getWidth() / 2;
+	var box1centery = 0 + box1.get(".outline")[0].getHeight() / 2;
+	var box2centerx = 100 + box2.get(".outline")[0].getWidth() / 2;
+	var box2centery = 100 + box2.get(".outline")[0].getHeight() / 2;
+	
+	ok(line, "Line object exists.");
+	notEqual(layer.getChildren().indexOf(line), -1, "Line is on the canvas.");
+	equal(line.getPoints()[0].x, box1centerx, "Line start x value.")
+	equal(line.getPoints()[0].y, box1centery, "Line start y value.")
+	equal(line.getPoints()[1].x, box2centerx, "Line end x value.")
+	equal(line.getPoints()[1].y, box2centery, "Line end y value.")
 });
 
-test("Box Removal Test", function(){
-    box = createBox(0,0);
+test("Box Removal Test", function() {
+    var box = createBox(0,0);
+    
     selectBox(box);
-    ok(selectedBox, "Box is selected");
-    ok(selectedBox.destroy, "Box is deleted");
-    selectedBox = null;	
- });
-
-test("Box Toggle test", function(){
-    box1 = createBox(20,20);
-    ok(!selectedBox, "Box is not selected");
-    selectBox(box1);
-    ok(selectedBox, "Box is selected");
-	
+    equal(selectedBox, box, "Box is selected");
+    removeSelectedBox()
+    equal(layer.getChildren().indexOf(box), -1, "Box is deleted");
 });
 
-test( "Line Drag Test:", function() {
-	box1 = createBox(0,0);
-	box2 = createBox(100,100);
-	line = createConnector(box1,box2);
-	box1.setX(5);
-	box1.setY(5);
+test("Box Toggle Test", function() {
+    var box1 = createBox(20,20);
+    var box2 = createBox(20,20);
+    
+    equal(selectedBox, null, "Box 1 is not selected");
+    equal(box1.getZIndex(), 0, "Box 1 is not in the front.")
+    
+    toggleSelection(box1);
+    
+    equal(selectedBox, box1, "Box 1 is selected");
+    equal(box1.getZIndex(), 1, "Box 1 is in the front.")
+    
+    toggleSelection(box1);
+    
+    equal(selectedBox, null, "Box 1 is unselected");
+});
+
+test("Line Drag Test", function() {
+	var box1 = createBox(0,0);
+	var box2 = createBox(100,100);
+	var line = createConnector(box1,box2);
+	
+	box1.setX(53);
+	box1.setY(27);
+	
+	var box1centerx = 53 + box1.get(".outline")[0].getWidth() / 2;
+	var box1centery = 27 + box1.get(".outline")[0].getHeight() / 2;
+	
 	updateLines(box1);
-	ok(line.getPoints()[0].x === 5 + box1.get(".outline")[0].getWidth() / 2, "LineStart.x = ");
-	ok(line.getPoints()[0].y === 5 + box1.get(".outline")[0].getHeight() / 2, "LineStart.y = ");
+	equal(line.getPoints()[0].x, box1centerx, "Line start x coordinate");
+	equal(line.getPoints()[0].y, box1centery, "Line start y coordinate");
 });
