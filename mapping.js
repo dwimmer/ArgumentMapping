@@ -99,7 +99,7 @@ function updateWidth(width) {
   	
 }
 
-function createBox(x, y, color) {
+function createBox(x, y, type) {
 	var width = 200;
 	
 	var text = new Kinetic.Text({
@@ -123,11 +123,17 @@ function createBox(x, y, color) {
 		shadowColor: "blue",
 	});
 	
+	var color;
+	if (type == "premise")
+		color = "rgb(128,192,128)";
+	else if (type == "rebuttal")
+		color = "rgb(255,128,128)";
+	
 	var background = new Kinetic.Rect({
 		name: "background",
 		width: width,
 		height: minHeight,
-		fill: color,
+		fill: color
 	});
 	
 
@@ -135,7 +141,8 @@ function createBox(x, y, color) {
 	var box = new Kinetic.Group({
 		x: x,
 		y: y,
-		draggable: true
+		draggable: true,
+		type: type
 	});
 	
 	box.startLineArray = [];

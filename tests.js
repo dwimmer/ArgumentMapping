@@ -124,6 +124,7 @@ test( "Update Text View Test", function() {
 	},this);
 	
 });
+
 test("Edit Box Text Test:", 2, function() {
 	var box1 = createBox(0,0);
 	equal(box1.get(".content")[0].getText(), "New Box Content","Initial Text is 'New Box Content'" );
@@ -131,5 +132,15 @@ test("Edit Box Text Test:", 2, function() {
 	updateTextView("Hello")
 	equal(box1.get(".content")[0].getText(), "Hello","Updated text not equal to 'Hello'" );
 
-
 });
+
+test("Differentiate Box Types Test", function() {
+	var premiseBox = createBox(0,0,"premise");
+	var rebuttalBox = createBox(0,0,"rebuttal");
+	equal(premiseBox.getAttrs().type, "premise", "Premise box has premise type attribute");
+	equal(premiseBox.getAttrs().type, "premise", "Rebuttal box has rebuttal type attribute");
+	equal(premiseBox.get(".background")[0].getAttrs().fill, "rgb(128,192,128)", "Premise box has correct color");
+	equal(rebuttalBox.get(".background")[0].getAttrs().fill, "rgb(255,128,128)", "Rebuttal box has correct color");
+});
+
+

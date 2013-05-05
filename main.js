@@ -4,15 +4,15 @@ var layer;
 $(window).on("load", function() {
 
 	$("#newPremise").on("dragstart", function(e) {
-		e.originalEvent.dataTransfer.setData("Color", "rgb(128,192,128)");
+		e.originalEvent.dataTransfer.setData("Type", "premise");
 	});
 	
 	$("#newRebuttal").on("dragstart", function(e) {
-		e.originalEvent.dataTransfer.setData("Color", "rgb(255,128,128)");
+		e.originalEvent.dataTransfer.setData("Type", "rebuttal");
 	});
 
 	$("#stage-container").on("dragover", function(e) {
-		if (e.originalEvent.dataTransfer.getData("Color")) {
+		if (e.originalEvent.dataTransfer.getData("Type")) {
 			e.preventDefault();
 		}
 	});
@@ -21,8 +21,8 @@ $(window).on("load", function() {
 		e.preventDefault();
 		var x = e.originalEvent.pageX - $(e.target).offset().left;
 		var y = e.originalEvent.pageY - $(e.target).offset().top;
-		var color = e.originalEvent.dataTransfer.getData("Color");
-		createBox(x, y, color);
+		var type = e.originalEvent.dataTransfer.getData("Type");
+		createBox(x, y, type);
 		stage.draw();
 	});
 
