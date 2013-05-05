@@ -66,3 +66,14 @@ test( "Line Drag Test:", function() {
 	ok(line.getPoints()[0].x === 5 + box1.get(".outline")[0].getWidth() / 2, "LineStart.x = ");
 	ok(line.getPoints()[0].y === 5 + box1.get(".outline")[0].getHeight() / 2, "LineStart.y = ");
 });
+
+test( "Box Resize Test:", function() {
+	var box = createBox(0,0);
+	selectBox(box);
+	updateWidth(300);
+	
+	selectedBox.getChildren().forEach(function(child) {
+		equal(child.getWidth(), 300, child.getName()+" width matches input");
+	},this);
+	
+});

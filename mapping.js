@@ -86,10 +86,10 @@ function resizeText(box) {
 	}
 }
 
-function updateWidth() {
+function updateWidth(width) {
 
 	selectedBox.getChildren().forEach(function(child) {
-		child.setWidth($(this).val());
+		child.setWidth(width);
 	},this);
 	
 	resizeText(selectedBox);
