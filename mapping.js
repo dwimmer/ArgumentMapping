@@ -48,13 +48,13 @@ function selectBox(box) {
 	$("#width").val(selectedBox.get(".content")[0].getWidth());
 }
 
-function toggleSelection(event) {
-	if (selectedBox === this) {
+function toggleSelection(box) {
+	if (selectedBox === box) {
 		unselectBox();
 	} else {
 		unselectBox();
-		selectBox(this);
-		this.moveToTop();
+		selectBox(box);
+		box.moveToTop();
 	}
 	stage.draw();
 }
@@ -140,7 +140,9 @@ function createBox(x, y, color) {
 	
 	box.startLineArray = [];
 	box.endLineArray = [];
-	box.on("mousedown", toggleSelection);
+	box.on("mousedown", function(){
+		toggleSelection(this);
+	});
 	box.on("dblclick", lineAttempt);
 	box.on("dragmove", function() {
 		updateLines(this);
