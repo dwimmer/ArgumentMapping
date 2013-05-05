@@ -103,3 +103,23 @@ test("Box Resize Test", 3, function() {
 	},this);
 	
 });
+
+test( "Update Text View Test", function() {
+	var box = createBox(0,0);
+	selectBox(box);
+	//make sure textHeight < minHeight is still minHeight
+	updateTextView("line1");
+	selectedBox.getChildren().forEach(function(child) {
+		if (child.getName() == "content")
+			equal(child.getHeight(), 16*1, child.getName()+" height is one line");
+		else
+			equal(child.getHeight(), 16*3, child.getName()+" height is minHeight");
+	},this);
+	
+	//make sure size can be bigger than minHeight
+	updateTextView("line1\nline2\nline3\nline4");
+	selectedBox.getChildren().forEach(function(child) {
+		equal(child.getHeight(), 16*4, child.getName()+" height greater than minHeight");
+	},this);
+	
+});

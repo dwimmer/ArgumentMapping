@@ -59,12 +59,12 @@ function toggleSelection(box) {
 	stage.draw();
 }
 
-function updateTextView() {
+function updateTextView(textString) {
 
 	var text = selectedBox.get(".content")[0];
 	
 	text.setAttrs({
-		text: $(this).val()
+		text: textString
 	});
 	
 	resizeText(selectedBox);
