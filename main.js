@@ -4,22 +4,24 @@ var layer;
 $(window).on("load", function() {
 
 	$("#newPremise").on("dragstart", function(e) {
-		e.originalEvent.dataTransfer.setData("text/plain", "rgb(128,192,128)");
+		e.originalEvent.dataTransfer.setData("Color", "rgb(128,192,128)");
 	});
 	
 	$("#newRebuttal").on("dragstart", function(e) {
-		e.originalEvent.dataTransfer.setData("text/plain", "rgb(255,128,128)");
+		e.originalEvent.dataTransfer.setData("Color", "rgb(255,128,128)");
 	});
 
 	$("#stage-container").on("dragover", function(e) {
-		e.preventDefault();
+		if (e.originalEvent.dataTransfer.getData("Color")) {
+			e.preventDefault();
+		}
 	});
 	
 	$("#stage-container").on("drop", function(e) {
 		e.preventDefault();
 		var x = e.originalEvent.pageX - $(e.target).offset().left;
 		var y = e.originalEvent.pageY - $(e.target).offset().top;
-		var color = e.originalEvent.dataTransfer.getData("text/plain");
+		var color = e.originalEvent.dataTransfer.getData("Color");
 		createBox(x, y, color);
 		stage.draw();
 	});
