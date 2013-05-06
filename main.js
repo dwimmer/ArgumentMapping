@@ -66,15 +66,16 @@ $(window).on("load", function() {
 	    link.dispatchEvent(evObj);
 	    
 	    return false;
-	});
-	    
-
-    $('a[href="#load"]').on("click", function(e) {
-		stage.remove();
-    	var fileToLoad = document.getElementById("fileToLoad").files[0];
+	}); 
+	
+	
+	$("#fileToLoad").on("change", function(e) {
+		var fileToLoad = this.files[0];
     	var fileReader = new FileReader();
     	fileReader.onload = function(fileLoadedEvent) {
         	var textFromFileLoaded = fileLoadedEvent.target.result;
+        	
+        	stage.remove();
 
     		stage = Kinetic.Node.create(textFromFileLoaded, 'stage-container');
     		layer = stage.getChildren()[0];
@@ -92,9 +93,13 @@ $(window).on("load", function() {
     		stage.draw();
     	};
     	fileReader.readAsText(fileToLoad, "UTF-8");
-    	
+    	$(this).val("");
+	});
+
+	$('a[href="#load"]').on("click", function(e) {		
+		$("#fileToLoad").click();
     	return false;
-   });
+    });
 	 
 	  
 	stage = new Kinetic.Stage({

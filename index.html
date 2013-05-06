@@ -38,15 +38,9 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="active"><a href="#">Home</a></li>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                            <li><a href="#export">Export Document</a></li>
                             <li><a href="#save">Save Document</a></li>
-                            <li>
-						        Select a File to Load:
-						        <input type="file" id="fileToLoad">
-                            </li>
-                            <li><a href="#load">Load Selected File</a><li>
+                            <li><a href="#load">Load Document</a><li>
+                            <li><a href="#export">Export Document</a></li>
                         </ul>
                         <form class="navbar-form pull-right">
                             <input class="span2" type="text" placeholder="Email">
@@ -85,6 +79,10 @@
             </footer>
 
         </div> <!-- /container -->
+        
+
+        <input type="file" id="fileToLoad" style="display:none">
+        
 
         <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="libraries/jquery-2.0.0.min.js"><\/script>')</script>
