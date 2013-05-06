@@ -64,6 +64,7 @@ $(window).on("load", function() {
 	    evObj.initEvent("click", true, false);
 					
 	    link.dispatchEvent(evObj);
+	    
 	    return false;
 	});
 	    
@@ -91,6 +92,8 @@ $(window).on("load", function() {
     		stage.draw();
     	};
     	fileReader.readAsText(fileToLoad, "UTF-8");
+    	
+    	return false;
    });
 	 
 	  
