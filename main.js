@@ -81,10 +81,12 @@ $(window).on("load", function() {
     		layer = stage.getChildren()[0];
     	
     		layer.getChildren().forEach(function(box) {
-    			box.on("mousedown", toggleSelection);
+    			box.on("mousedown", function() {
+    				toggleSelection(this);
+    			});
 				box.on("dblclick", lineAttempt);
 				box.on("dragmove", function() {
-						updateLines(this);
+					updateLines(this);
 				});
     		});
     	
