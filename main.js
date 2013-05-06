@@ -55,6 +55,8 @@ $(window).on("load", function() {
 	});
 	
 	$('a[href="#save"]').on("click", function(e) {
+		unselectBox();
+		stage.draw();
 	    var link = document.createElement("a");
 	    link.download = "File.json";
 	    link.href = "data:text/json," + encodeURIComponent(stage.toJSON());
