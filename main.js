@@ -55,18 +55,16 @@ $(window).on("load", function() {
 	});
 	
 	$('a[href="#save"]').on("click", function(e) {
-	    var json = stage.toJSON();
-    	var textFileAsBlob = new Blob([json], {type:'text/json'});
 	    var link = document.createElement("a");
 	    link.download = "File.json";
-	    link.href = window.webkitURL.createObjectURL(textFileAsBlob);
-	 
+	    link.href = "data:text/json," + encodeURIComponent(stage.toJSON());
 	    link.target = "_blank";
 				
 	    var evObj = document.createEvent("MouseEvent");
 	    evObj.initEvent("click", true, false);
 					
 	    link.dispatchEvent(evObj);
+	    return false;
 	});
 	    
 
