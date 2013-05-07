@@ -36,7 +36,18 @@ $(window).on("load", function() {
 	
 	$('a[href="#export"]').on("click", function(e) {
 		unselectBox();
+		
+		var background = new Kinetic.Rect({
+			id: "background",
+			fill: "white",
+			width: 2560,
+			height: 1600
+		})
+	
+		layer.add(background);
+		background.moveToBottom();
 		stage.draw();
+		
 		stage.toDataURL({
 			callback: function(dataURL) {
 				var link = document.createElement("a");
@@ -49,6 +60,8 @@ $(window).on("load", function() {
 				
 				link.dispatchEvent(evObj);
 /* 				link.click(); */
+
+				layer.get("#background")[0].remove();
 			}
 		});
 		return false;
