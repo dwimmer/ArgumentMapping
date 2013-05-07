@@ -74,6 +74,7 @@ function updateTextView(textString) {
 	});
 	
 	resizeText(selectedBox);
+	updateLines(selectedBox);
 	
 	stage.draw();
   	
